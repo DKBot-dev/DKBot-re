@@ -333,5 +333,24 @@ async def on_ready():
         # Error handling for issues that occur during setup
         print(f"Error syncing commands: {e}")
 
+# --- FLASK SERVER (For Render Hosting) ---
+import flask
+
+app = flask.Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+if __name__ == "__main__":
+    import threading
+
+    def run_flask():
+        app.run(host="0.0.0.0", port=10000)
+
+    # Run Flask server in a separate thread
+    thread = threading.Thread(target=run_flask)
+    thread.start()   
+
 # Run the bot
 bot.run(DISCORD_BOT_TOKEN)
