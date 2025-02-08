@@ -1,5 +1,7 @@
 import discord
+import flask
 from discord.ext import commands, tasks
+import threading
 from dotenv import load_dotenv
 import os
 import logging
@@ -334,23 +336,34 @@ async def on_ready():
         print(f"Error syncing commands: {e}")
 
 # --- FLASK SERVER (For Render Hosting) ---
-import flask
-
 app = flask.Flask(__name__)
 
 @app.route('/')
 def home():
     return "Bot is running!"
 
-if __name__ == "__main__":
-    import threading
+# Define a periodic task to keep the bot alive
+@tasks.loop(minutes=5)  # Runs every 5 minutes
+async def keep_alive():
+    print("Bot is still alive!")
 
-    def run_flask():
-        app.run(host="0.0.0.0", port=10000)
+# Discord bot setup
+intents = discord.Intents.default()
+bot = commands.Bot(command_prefix='/', intents=intents)
 
-    # Run Flask server in a separate thread
-    thread = threading.Thread(target=run_flask)
-    thread.start()   
+# When bot is ready, start the keep_alive task
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user}")
+    keep_alive.start()  # Start the periodic keep-alive task
+
+# Function to run the Flask server in a separate thread
+def run_flask():
+    app.run(host="0.0.0.0", port=10000)
+
+# Run Flask server in a separate thread to keep the service alive
+thread = threading.Thread(target=run_flask)
+thread.start()
 
 # Run the bot
 bot.run(DISCORD_BOT_TOKEN)
