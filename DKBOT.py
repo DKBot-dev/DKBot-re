@@ -321,8 +321,12 @@ async def on_ready():
         # Authenticate using the new OAuth method
         await authenticate_twitch()
 
+        # Wait for a short time to ensure the bot is fully ready before syncing
+        await asyncio.sleep(5)  # Adding a 5-second delay before syncing commands
+
         # Sync commands with Discord (ensure the bot commands are updated)
         await bot.tree.sync()
+        print("Commands synced!")
 
         # Debug: Print all registered commands to the console
         print("Commands registered:")
