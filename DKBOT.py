@@ -340,34 +340,23 @@ async def on_ready():
         print(f"Error syncing commands: {e}")
 
 # --- FLASK SERVER (For Render Hosting) ---
+import flask
+
 app = flask.Flask(__name__)
 
 @app.route('/')
 def home():
     return "Bot is running!"
 
-# Define a periodic task to keep the bot alive
-@tasks.loop(minutes=5)  # Runs every 5 minutes
-async def keep_alive():
-    print("Bot is still alive!")
+if __name__ == "__main__":
+    import threading
 
-# Discord bot setup
-intents = discord.Intents.default()
-bot = commands.Bot(command_prefix='/', intents=intents)
+    def run_flask():
+        app.run(host="0.0.0.0", port=10000)
 
-# When bot is ready, start the keep_alive task
-@bot.event
-async def on_ready():
-    print(f"Logged in as {bot.user}")
-    keep_alive.start()  # Start the periodic keep-alive task
-
-# Function to run the Flask server in a separate thread
-def run_flask():
-    app.run(host="0.0.0.0", port=10000)
-
-# Run Flask server in a separate thread to keep the service alive
-thread = threading.Thread(target=run_flask)
-thread.start()
+    # Run Flask server in a separate thread
+    thread = threading.Thread(target=run_flask)
+    thread.start()   
 
 # Run the bot
 bot.run(DISCORD_BOT_TOKEN)
