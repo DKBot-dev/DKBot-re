@@ -347,7 +347,7 @@ def home():
     return "Bot is running!"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.getenv('PORT', 10000)))  # Use Render's dynamic port
+    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 10000)))  # Use Render's dynamic port
 
 # Run the bot
 bot.run(DISCORD_BOT_TOKEN)
