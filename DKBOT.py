@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands, tasks
-import threading
 from dotenv import load_dotenv
 import os
 import logging
@@ -348,10 +347,7 @@ def home():
     return "Bot is running!"
 
 if __name__ == "__main__":
-    import threading
-
-    def run_flask():
-        app.run(host="0.0.0.0", port=int(os.getenv('PORT', 10000)))  # Use Render's dynamic port
+    app.run(host="0.0.0.0", port=int(os.getenv('PORT', 10000)))  # Use Render's dynamic port
 
 # Run the bot
 bot.run(DISCORD_BOT_TOKEN)
