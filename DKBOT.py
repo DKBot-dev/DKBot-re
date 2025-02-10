@@ -339,15 +339,25 @@ async def on_ready():
 
 # --- FLASK SERVER (For Render Hosting) ---
 import flask
+import threading
 
+# Initialize Flask app
 app = flask.Flask(__name__)
 
 @app.route('/')
 def home():
     return "Bot is running!"
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 10000)))  # Use Render's dynamic port
+# Function to run Flask in a separate thread
+def run_flask():
+    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 10000)))
+
+# Run Flask in a separate thread
+flask_thread = threading.Thread(target=run_flask)
+flask_thread.start()
+
+# Run the Discord bot
+bot.run(DISCORD_BOT_TOKEN)
 
 # Run the bot
 bot.run(DISCORD_BOT_TOKEN)
