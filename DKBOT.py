@@ -1,5 +1,4 @@
 import discord
-import flask
 from discord.ext import commands, tasks
 import threading
 from dotenv import load_dotenv
