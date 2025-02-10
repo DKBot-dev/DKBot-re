@@ -351,7 +351,7 @@ if __name__ == "__main__":
     import threading
 
     def run_flask():
-        app.run(host="0.0.0.0", port=10000)
+        app.run(host="0.0.0.0", port=int(os.getenv('PORT', 10000)))  # Use Render's dynamic port
 
     # Run Flask server in a separate thread
     thread = threading.Thread(target=run_flask)
