@@ -353,9 +353,5 @@ if __name__ == "__main__":
     def run_flask():
         app.run(host="0.0.0.0", port=int(os.getenv('PORT', 10000)))  # Use Render's dynamic port
 
-    # Run Flask server in a separate thread
-    thread = threading.Thread(target=run_flask)
-    thread.start()   
-
 # Run the bot
 bot.run(DISCORD_BOT_TOKEN)
